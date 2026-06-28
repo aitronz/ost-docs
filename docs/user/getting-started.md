@@ -126,7 +126,7 @@ OpenSteamTool needs Lua (`.lua`) files to know which games to unlock. **You do n
 
 ```mermaid
 flowchart TD
-    A[Go to HubCup or Ryuu] --> B[Find your game]
+    A[Go to the source website] --> B[Find your game]
     B --> C[Download the file]
     C --> D[Extract only the .lua file]
     D --> E[Place .lua in config/lua/]
