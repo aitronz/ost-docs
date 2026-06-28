@@ -50,7 +50,7 @@ From the downloaded archive, take **only the `.lua` file**. Do not grab manifest
 
 The `.lua` files from Hubcap and Ryuu contain `addappid()` and `addtoken()` calls to unlock games, but they often **do not include the Denuvo ticket data** (AppTicket and ETicket) needed for Denuvo-protected games. Without this, Denuvo games will fail with error `88500005`.
 
-You can get a Denuvo crack from trusted sources like **voices38** that removes the Denuvo protection entirely. Place these files in the **game's installation folder**.
+You can get a Denuvo crack from trusted sources like **voices38**(search it yourself) that removes the Denuvo protection entirely. Place these files in the **game's installation folder**.
 
 ## Online Fix
 
@@ -61,7 +61,7 @@ Some games also need the built-in **Online Fix** to enable multiplayer. Add `-on
 3. Under **Launch Options**, add: `-onlinefix`
 4. Launch the game
 
-See the **[Online Fix guide](/guide/online/online-fix)** for details and troubleshooting.
+See the **[Online Play guide](/user/online-play)** for details and troubleshooting.
 
 ## Ratings
 
