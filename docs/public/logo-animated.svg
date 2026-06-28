@@ -72,7 +72,6 @@
     }
   </style>
 
-<rect width="1024" height="1024" fill="white"/>
 <g class="mistLayer">
   <ellipse class="mistPuff one" cx="375" cy="645" rx="170" ry="82"/>
   <ellipse class="mistPuff two" cx="650" cy="360" rx="150" ry="76"/>
