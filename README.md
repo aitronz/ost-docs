@@ -43,7 +43,7 @@ npm run docs:preview
 
 ## Content Sections
 
-- **User Guide** — Non-technical installation walkthrough, trusted Lua sources (Hubcap, Ryuu), online play methods, and a concepts glossary
+- **User Guide** — Non-technical installation walkthrough, trusted [Lua sources](/user/lua-sources), online play methods, and a concepts glossary
 - **Developer Guide** — Full Lua API, TOML configuration, Denuvo ticket management, DLL injection, online fix, Steam compatibility, and building from source
 - **Upcoming Features** — Early documentation for unmerged PRs and in-development features
 

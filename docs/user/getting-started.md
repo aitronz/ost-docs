@@ -108,11 +108,11 @@ Start Steam normally. OpenSteamTool loads automatically through the DLLs you pla
 
 OpenSteamTool needs Lua (`.lua`) files to know which games to unlock. **You do not need to write these yourself.** You can get ready-made Lua files from community sources. With Steam running, OST automatically detects any new `.lua` file you add — no restart needed.
 
-See the **[Lua Configuration Sources guide](/user/lua-sources)** for full instructions on each source, download limits, and ratings.
+See the **[Lua Sources guide](/user/lua-sources)** for full instructions on each source, download limits, and ratings.
 
 ### Quick Steps
 
-1. Go to a source website ([Hubcap](https://hubcapmanifest.com/) or [Ryuu](https://generator.ryuu.lol/))
+1. Go to a [source website](/user/lua-sources)
 2. Find your game and download the `.lua` file
 3. Place it in your `config\lua\` folder
 4. Go to your **Steam Library** — the game should appear. Click **Install** (or **Play** if already installed).

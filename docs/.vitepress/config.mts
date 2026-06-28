@@ -62,7 +62,7 @@ export default withMermaid(
                             link: "/user/troubleshooting/faq",
                         },
                         {
-                            text: "Lua Configuration Sources",
+                            text: "Lua Sources",
                             link: "/user/lua-sources",
                         },
                     ],

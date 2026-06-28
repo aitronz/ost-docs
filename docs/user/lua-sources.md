@@ -1,4 +1,4 @@
-# Lua Configuration Sources
+# Lua Sources
 
 OpenSteamTool needs `.lua` files to know which games to unlock. You can get these from two community sources — **no programming required**.
 
@@ -43,6 +43,23 @@ OpenSteamTool needs `.lua` files to know which games to unlock. You can get thes
 ::: warning Only take the .lua file
 From the downloaded archive, take **only the `.lua` file**. Do not grab manifest files, executables, installers, or other files. Let OST download everything else it needs on its own.
 :::
+
+## Denuvo Fix
+
+The `.lua` files from Hubcap and Ryuu contain `addappid()` and `addtoken()` calls to unlock games, but they often **do not include the Denuvo ticket data** (AppTicket and ETicket) needed for Denuvo-protected games. Without this, Denuvo games will fail with error `88500005`.
+
+You can get a Denuvo crack from trusted sources like **voices38** that removes the Denuvo protection entirely. Place these files in the **game's installation folder**.
+
+## Online Fix
+
+Some games also need the built-in **Online Fix** to enable multiplayer. Add `-onlinefix` to the game's launch options in Steam:
+
+1. Right-click the game in your Steam library
+2. Select **Properties**
+3. Under **Launch Options**, add: `-onlinefix`
+4. Launch the game
+
+See the **[Online Fix guide](/guide/online/online-fix)** for details and troubleshooting.
 
 ## Ratings
 
