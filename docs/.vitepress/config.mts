@@ -4,6 +4,8 @@ import { withMermaid } from "vitepress-plugin-mermaid";
 // https://vitepress.dev/reference/site-config
 export default withMermaid(
     defineConfig({
+        base: "/ost-docs/",
+
         title: "OST Docs",
         description:
             "OpenSteamTool documentation — community guide and developer reference",
