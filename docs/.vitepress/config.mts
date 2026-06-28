@@ -12,6 +12,60 @@ export default withMermaid(
 
         head: [
             [
+                "link",
+                {
+                    rel: "icon",
+                    type: "image/svg+xml",
+                    href: "/ost-docs/logo-512.png",
+                },
+            ],
+            [
+                "meta",
+                {
+                    property: "og:title",
+                    content: "OST Docs — OpenSteamTool Documentation",
+                },
+            ],
+            [
+                "meta",
+                {
+                    property: "og:description",
+                    content:
+                        "Community documentation for installing, configuring, and extending OpenSteamTool — an open-source Steam unlock tool.",
+                },
+            ],
+            [
+                "meta",
+                { property: "og:image", content: "/ost-docs/logo-512.png" },
+            ],
+            [
+                "meta",
+                {
+                    property: "og:url",
+                    content: "https://aitronz.github.io/ost-docs/",
+                },
+            ],
+            ["meta", { name: "twitter:card", content: "summary" }],
+            [
+                "meta",
+                {
+                    name: "twitter:title",
+                    content: "OST Docs — OpenSteamTool Documentation",
+                },
+            ],
+            [
+                "meta",
+                {
+                    name: "twitter:description",
+                    content:
+                        "Community documentation for installing, configuring, and extending OpenSteamTool.",
+                },
+            ],
+            [
+                "meta",
+                { name: "twitter:image", content: "/ost-docs/logo-512.png" },
+            ],
+            [
                 "style",
                 {},
                 `
@@ -26,8 +80,8 @@ export default withMermaid(
         themeConfig: {
             // https://vitepress.dev/reference/default-theme-config
             logo: {
-                light: "/logo-animated.svg",
-                dark: "/logo-animated.svg",
+                light: "/logo-512.png",
+                dark: "/logo-512.png",
                 alt: "OST Logo",
             },
             siteTitle: "OST Docs",
