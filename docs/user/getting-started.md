@@ -106,23 +106,16 @@ Start Steam normally. OpenSteamTool loads automatically through the DLLs you pla
 
 ## Step 7: Get Lua Configuration Files
 
-OpenSteamTool needs Lua (`.lua`) files to know which games to unlock. **You do not need to write these yourself.** You can get ready-made Lua files from trusted community sources. With Steam running, OST automatically detects any new `.lua` file you add — no restart needed.
+OpenSteamTool needs Lua (`.lua`) files to know which games to unlock. **You do not need to write these yourself.** You can get ready-made Lua files from community sources. With Steam running, OST automatically detects any new `.lua` file you add — no restart needed.
 
-### Recommended Sources
+See the **[Lua Configuration Sources guide](/user/lua-sources)** for full instructions on each source, download limits, and ratings.
 
-| Source | Daily Downloads | URL | Notes |
-|---|---|---|---|
-| **HubCup** | ~25 | https://hubcapmanifest.com/ | Most popular, well-maintained |
-| **Ryuu** | ~50 | https://generator.ryuu.lol/ | Large collection, frequently updated |
+### Quick Steps
 
-### How to Use Them
-
-1. Go to the source website
-2. Find the game you want to unlock
-3. Download the provided file (it will contain the `.lua` configuration)
-4. **Only take the `.lua` file** from the download — place it in your `config\lua\` folder
-5. Go to your **Steam Library** — the game should appear. Click **Install** (or **Play** if already installed).
-6. OpenSteamTool handles the download and decryption automatically
+1. Go to a source website ([Hubcap](https://hubcapmanifest.com/) or [Ryuu](https://generator.ryuu.lol/))
+2. Find your game and download the `.lua` file
+3. Place it in your `config\lua\` folder
+4. Go to your **Steam Library** — the game should appear. Click **Install** (or **Play** if already installed).
 
 ```mermaid
 flowchart TD

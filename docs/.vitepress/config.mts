@@ -61,6 +61,10 @@ export default withMermaid(
                             text: "Troubleshooting & FAQ",
                             link: "/user/troubleshooting/faq",
                         },
+                        {
+                            text: "Lua Configuration Sources",
+                            link: "/user/lua-sources",
+                        },
                     ],
                 },
                 {

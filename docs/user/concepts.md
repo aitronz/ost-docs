@@ -50,7 +50,7 @@ addappid(730)
 addappid(570)
 ```
 
-You don't need to know how to program — you can download ready-made Lua files from community sources like [HubCup](https://hubcapmanifest.com/) and [Ryuu](https://generator.ryuu.lol/).
+You don't need to know how to program — you can download ready-made Lua files from trusted community sources. See the **[Lua Configuration Sources guide](/user/lua-sources)** for details.
 
 ### DLC (Downloadable Content)
 Extra content for a game, like expansion packs, skins, or season passes. Each DLC has its own AppID. OST can unlock DLCs for games you've configured.

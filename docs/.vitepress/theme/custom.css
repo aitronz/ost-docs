@@ -86,7 +86,6 @@
     border: 1px solid var(--vp-c-divider);
 }
 
-
 .VPHero .tagline {
     font-size: 1.25rem;
     max-width: 600px;
@@ -111,9 +110,20 @@
     padding-top: 0.75rem;
 }
 
+.medium-zoom-overlay {
+    z-index: 100;
+}
+
+.medium-zoom-image--opened {
+    z-index: 101;
+}
 
 @media (max-width: 640px) {
     .vp-doc table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
         font-size: 0.875rem;
     }
 }

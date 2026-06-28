@@ -69,7 +69,7 @@ Denuvo verification has a **30-minute validity window**. After that, the ticket 
 **Fix:**
 
 1. Close the game
-2. Get fresh AppTicket and ETicket data (download a new `.lua` file from HubCup or Ryuu)
+2. Get fresh AppTicket and ETicket data (download a new `.lua` file from [Hubcap or Ryuu](/user/lua-sources))
 3. Try launching again
 
 If the issue persists, the game may need extra Lua configuration (like `forcedenuvo` or `addprocess`) — the Lua file provider typically handles this.
@@ -171,7 +171,7 @@ This refreshes Steam's license cache. If it still doesn't work, try getting a fr
 
 1. Make sure your `.lua` file is in the correct folder: `config\lua\` (not `config\stplug-in\`)
 2. **Close Steam** fully and reopen it
-3. If still not working, try a fresh `.lua` file from a different source (HubCup vs Ryuu)
+3. If still not working, try a fresh `.lua` file from a [different source](/user/lua-sources) (Hubcap vs Ryuu)
 4. Check if the manifest API is blocked (see [Download Issues](#download-issues) below)
 
 ### Manifest download fails / "no internet" / HTTP 403
@@ -242,12 +242,7 @@ Simply close Steam (Exit from system tray), then relaunch.
 
 ### Where do I get .lua files?
 
-You don't need to write them yourself. Use trusted community sources:
-
-| Source | URL | Notes |
-|---|---|---|
-| **HubCup** | https://hubcapmanifest.com/ | Most popular, ~25 daily downloads |
-| **Ryuu** | https://generator.ryuu.lol/ | Large collection, ~50 daily downloads |
+You don't need to write them yourself. See the **[Lua Configuration Sources guide](/user/lua-sources)** for trusted sources, download limits, and ratings.
 
 Only take the `.lua` file from the download. **Do not** run any executables, installers, or tools that may be included.
 
