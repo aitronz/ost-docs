@@ -50,7 +50,10 @@ addappid(730)
 addappid(570)
 ```
 
-You don't need to know how to program — you can download ready-made Lua files from trusted community sources. See the **[Lua Sources guide](/user/lua-sources)** for details.
+You don't need to know how to program — you can download ready-made Lua files from community sources. See the **[Lua Sources guide](/user/lua-sources)** for details.
+
+### Lua Sources
+Websites that generate `.lua` configuration files for specific games. The two main sources are **Hubcap** and **Ryuu** — they provide the `addappid()` and `addtoken()` calls needed to unlock games. See the **[Lua Sources guide](/user/lua-sources)** for step-by-step instructions, ratings, and download limits.
 
 ### DLC (Downloadable Content)
 Extra content for a game, like expansion packs, skins, or season passes. Each DLC has its own AppID. OST can unlock DLCs for games you've configured.
@@ -137,6 +140,11 @@ A company that makes anti-tamper / DRM software used by many major game publishe
 - A **30-minute authorization window** — after that, the check expires and you get error `88500005`
 - Sometimes extra Lua configuration for specific games
 
+Alternatively, you can use a **Denuvo crack** (see below) to remove the protection entirely instead of relying on ticket authorization.
+
+### Denuvo Fix (Denuvo Crack)
+A set of files from third-party sources (e.g., **voices38**) that **removes Denuvo protection** from a game's executable entirely, bypassing the need for AppTicket/ETicket data and the 30-minute authorization window. Unlike the `.lua` files from Hubcap or Ryuu (which go in `config\lua\`), Denuvo crack files are placed in the **game's installation folder**.
+
 ### Ticket (AppTicket and ETicket)
 A piece of encrypted data that proves game ownership. When you buy a game on Steam, Steam stores a ticket on your computer. OST can use tickets from accounts that genuinely own a game to unlock it for others.
 
@@ -164,6 +172,8 @@ A Steam launch option that enables lobby-based multiplayer for unlocked games. I
 - Only one game at a time can use `-onlinefix`
 - Works with games that use Steam lobby matchmaking
 - Results vary depending on the game's networking
+
+See the **[Lua Sources guide](/user/lua-sources)** for quick setup steps and the **[Online Fix guide](/guide/online/online-fix)** for full details.
 
 ### Rich Presence
 The status shown to your Steam friends (e.g., "Playing Counter-Strike 2"). Normally, Steam won't broadcast the correct game name for unlocked games. OST can spoof it so friends see what you're actually playing instead of just "Online."
