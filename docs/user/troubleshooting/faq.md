@@ -51,6 +51,61 @@ This is rare but can happen if the DLLs are corrupted or incompatible with your 
 4. Re-extract and re-copy the files
 
 
+## Security & Privacy
+
+### Is OpenSteamTool safe? Does it send my data somewhere?
+
+**Yes, it's safe.** OpenSteamTool runs **entirely locally** inside your Steam client. It does not:
+
+- **Send your personal data** — No login credentials, Steam account info, or game activity is transmitted anywhere
+- **Send usage statistics** — OST does not report usage statistics, installed games, or anything about your system to any server
+- **Modify game files** — OST by itself only intercepts Steam's ownership checks. Your game installations remain untouched
+
+**What network requests OST makes:**
+
+| Request | Purpose | Frequency |
+|---------|---------|-----------|
+| **Pattern downloads** | Fetches hook locations for your Steam version from `steam-monitor` | On Steam launch |
+| **Manifest downloads** | Gets game manifest codes needed to download games (via `manifest.opensteamtool.com` or your configured API) | Per game download |
+| **Stats API** (optional) | Queries recommended SteamIDs for achievements (via `stats.opensteamtool.com`) | When `[stats] enable_api = true` |
+
+All of these are essential technical requests — no tracking, no telemetry, no data collection.
+
+### Can OST steal my Steam account?
+
+**No.** OpenSteamTool does not have access to your Steam password, login tokens, or account credentials. It runs as a DLL inside Steam and hooks internal functions — it never interacts with Steam's authentication system. The source code is fully public and can be verified by anyone.
+
+### Why does antivirus flag OST as a virus?
+
+OST uses **DLL proxy techniques** (`dwmapi.dll`, `xinput1_4.dll`) — it places DLLs with the same names as Windows system DLLs in the Steam folder so Steam loads them instead. This technique is also used by some malware, which is why antivirus software sometimes raises false positives.
+
+The DLLs are **safe and fully open source**. You can:
+1. Inspect the code on [GitHub](https://github.com/OpenSteam001/OpenSteamTool)
+2. Build the binaries yourself from source
+3. Add your Steam folder to your antivirus exclusion list
+
+See the [Antivirus is blocking OpenSteamTool](#antivirus-is-blocking-opensteamtool) section above for detailed steps.
+
+### Can the .lua files from sources contain malware?
+
+Lua (`.lua`) files are **plain text configuration files** — they contain simple function calls like `addappid(730)`. They cannot execute arbitrary code or infect your system.
+
+However, the downloaded archives may contain other files (executables, installers, etc.). **Only take the `.lua` file** and ignore everything else. Never run random executables from any source.
+
+### Can Steam ban my account for using OST?
+
+**No, there is no risk.** OpenSteamTool works by intercepting Steam's internal functions **locally on your machine** — it never sends modified data, forged ownership claims, or any account-related information to Steam's servers. From Steam's perspective, you are simply playing games you downloaded through the client, just like any other user.
+
+Why bans are not a concern:
+
+- **All unlocking happens locally** — OST changes what Steam *thinks* you own by hooking in-memory functions. Steam's servers never receive fake ownership data
+- **No server-side detection** — There is no mechanism for Steam to detect that OST is running. It appears identical to a normal Steam client to Steam's backend
+- **No account tampering** — OST does not modify Steam account data, login credentials, or authentication tokens
+- **Games are downloaded from Steam** — You download games directly from Steam's official servers. OST just removes the ownership check
+
+That said, as with any third-party tool, use it at your own discretion. If you are concerned about your account, you can run OST on an alternate Steam account.
+
+
 ## Game Launch Issues
 
 ### Ubisoft games fail to launch (click "Start Game" but nothing happens)

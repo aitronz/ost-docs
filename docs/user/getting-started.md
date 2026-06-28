@@ -6,6 +6,9 @@ This guide is **community-maintained** and not an official OpenSteamTool resourc
 ::: tip First time? Read the [Concepts & Glossary](/user/concepts) page first
 It explains all the technical terms used here — DLLs, AppIDs, Lua, Denuvo, and more — so you know exactly what you're installing.
 :::
+::: tip Is OST safe for my account?
+**Yes.** OST runs entirely locally and never sends account data to Steam's servers. See the **[Security & Privacy FAQ](/user/troubleshooting/faq#security-privacy)** for details.
+:::
 ## Before You Install — What OST Does
 
 **OpenSteamTool (OST)** is a tool that runs inside your Steam client to unlock games you don't own. It works by placing special DLL files in your Steam folder that intercept Steam's ownership checks and tell it "this game is okay to play."
