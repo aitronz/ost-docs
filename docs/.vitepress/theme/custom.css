@@ -56,10 +56,7 @@
 
 .custom-block {
     border-radius: 10px;
-    padding: 16px 20px;
-    margin: 1.5rem 0;
     border: 1px solid;
-    font-size: 0.9375rem;
 }
 
 .custom-block.info {
@@ -99,13 +96,7 @@
 }
 
 .custom-block-title {
-    padding-bottom: 8px;
     font-weight: 600;
-    letter-spacing: 0.02em;
-}
-
-.custom-block p {
-    line-height: 1.7;
 }
 
 .custom-block:not(.details) > p:first-of-type {
@@ -215,24 +206,6 @@
 
 .medium-zoom-image--opened {
     z-index: 101;
-}
-
-::-webkit-scrollbar {
-    width: 0.4rem;
-    height: 0.4rem;
-}
-
-::-webkit-scrollbar-track {
-    background: color-mix(in srgb, var(--vp-c-bg-soft) 50%, transparent);
-}
-
-::-webkit-scrollbar-thumb {
-    background: color-mix(in srgb, var(--vp-c-divider) 80%, transparent);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: color-mix(in srgb, var(--vp-c-text-3) 50%, transparent);
 }
 
 ::-moz-selection {
