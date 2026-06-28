@@ -74,6 +74,8 @@ Denuvo verification has a **30-minute validity window**. After that, the ticket 
 
 If the issue persists, the game may need extra Lua configuration (like `forcedenuvo` or `addprocess`) — the Lua file provider typically handles this.
 
+Alternatively, you can use a **Denuvo crack** to remove the protection entirely. See the **[Lua Sources guide](/user/lua-sources)** for details.
+
 ### Denuvo error 88500012 / 88500051
 
 These errors mean the Denuvo authorization path never engaged — usually because:
@@ -110,9 +112,13 @@ Some older SteamStub-protected games (like **Fallout: New Vegas**) may need manu
 ### Game crashes on launch
 
 1. Disable DLL injection if you have it enabled — set `[inject] enabled = false` in `opensteamtool.toml`
-2. Remove `-onlinefix` from launch options if you're using it
-3. Check if the game uses Denuvo — you may need refreshed tickets
+2. Remove `-onlinefix` from launch options if you're using it (see the **[Online Play guide](/user/online-play)**)
+3. Check if the game uses Denuvo — you may need refreshed tickets or a **Denuvo crack** (see the **[Lua Sources guide](/user/lua-sources)**)
 4. Try the Debug build and check `pipe.log` for Denuvo authorization issues
+
+### Multiplayer / online play doesn't work
+
+If a game's multiplayer isn't working, see the **[Online Play guide](/user/online-play)**.
 
 ### I own a legitimate copy of a game, but OST is interfering
 
