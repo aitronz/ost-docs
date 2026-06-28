@@ -16,11 +16,11 @@ OpenSteamTool needs `.lua` files to know which games to unlock. You can get thes
 3. Click **"Continue with Discord"**, authenticate, then return to the main page
 4. Use the search box to find your game by name or Steam App ID
 
-   ![Hubcap search](/ost-docs/images/lua-guides/hubcap-search.png)
+   ![Hubcap search](/images/lua-guides/hubcap-search.png)
 
 5. Click **"Check & Download"** to download the `.lua` file
 
-   ![Hubcap download](/ost-docs/images/lua-guides/hubcap-download.png)
+   ![Hubcap download](/images/lua-guides/hubcap-download.png)
 
 6. Extract the `.lua` file from the downloaded zip file (ignore any other files)
 7. Place the `.lua` file in `config\lua\`
@@ -32,11 +32,11 @@ OpenSteamTool needs `.lua` files to know which games to unlock. You can get thes
 3. Click **"Login with Discord"**, authenticate, then return to the main page
 4. Make sure the toggle is set to **.lua** mode (to only see `.lua` files) and use the search box to find your game by name or Steam App ID
 
-   ![Ryuu search](/ost-docs/images/lua-guides/ryuu-search.png)
+   ![Ryuu search](/images/lua-guides/ryuu-search.png)
 
 5. Click **"Download"** to download the `.lua` file
 
-   ![Ryuu download](/ost-docs/images/lua-guides/ryuu-download.png)
+   ![Ryuu download](/images/lua-guides/ryuu-download.png)
 
 6. Place the `.lua` file in `config\lua\`
 
