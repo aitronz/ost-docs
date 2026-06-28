@@ -5,10 +5,20 @@ import { withMermaid } from "vitepress-plugin-mermaid";
 export default withMermaid(
     defineConfig({
         base: "/ost-docs/",
+        cleanUrls: true,
+        lastUpdated: true,
 
         title: "OST Docs",
         description:
             "OpenSteamTool documentation — community guide and developer reference",
+
+        vite: {
+            ssr: {
+                noExternal: [
+                    "@nolebase/vitepress-plugin-enhanced-readabilities",
+                ],
+            },
+        },
 
         head: [
             [
@@ -202,6 +212,32 @@ export default withMermaid(
                     ],
                 },
             ],
+
+            search: {
+                provider: "local",
+                options: {
+                    translations: {
+                        button: {
+                            buttonText: "Search docs...",
+                            buttonAriaLabel: "Search docs",
+                        },
+                        modal: {
+                            noResultsText: "No results for",
+                            resetButtonTitle: "Clear",
+                            footer: {
+                                selectText: "to select",
+                                navigateText: "to navigate",
+                            },
+                        },
+                    },
+                },
+            },
+
+            editLink: {
+                pattern:
+                    "https://github.com/aitronz/ost-docs/edit/main/docs/:path",
+                text: "Suggest Changes",
+            },
 
             socialLinks: [
                 {
