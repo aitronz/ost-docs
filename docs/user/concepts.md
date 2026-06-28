@@ -93,8 +93,43 @@ A "depot" is a chunk of a game's files on Steam. A single game may have multiple
 
 OST can unlock and decrypt individual depots. The depot system is why a single `addappid()` call can include a depot ID and a decryption key.
 
+#### How Depots Work Under the Hood
+
+Every depot has a **depot manifest** — a file that acts as the table of contents for that depot. The manifest is identified by a unique 64-bit ID and contains:
+- The **file list** (encrypted file names, sizes, hashes, and flags)
+- **Chunk metadata** for each file (chunk ID, adler32 checksum, offset, compressed and uncompressed sizes)
+
+Each file in a depot is split into roughly **one-megabyte chunks**. Each chunk is:
+1. Compressed with **LZMA** (a high-ratio compression algorithm)
+2. Encrypted with **AES-256** (a strong symmetric encryption standard)
+
+All chunks in a depot share the same encryption key. This key is **unique to the depot** but the **same for all Steam users** — which is what allows CDNs and LAN caches to efficiently cache content.
+
 ### Decryption Key (Depot Key)
-A secret key needed to decrypt a game's depot files after downloading. Some games require this to be provided in the Lua configuration. It looks like a long hex string: `5954562e7f5260400040a818bc29b60b`.
+A secret 256-bit key needed to decrypt a game's depot files after downloading. Steam encrypts every depot chunk with AES-256, and the decryption key is what unlocks them. It looks like a long hex string:
+
+```
+5954562e7f5260400040a818bc29b60b335bb690066ff767e20d145a3b6b4af0
+```
+
+#### How Keys Are Managed
+
+OST hooks into Steam's `ConfigStoreGetBinary` function to intercept requests for depot decryption keys. When a key is provided in Lua, OST injects it directly into Steam's decryption engine. If no key is provided for a depot, OST lets the request pass through to Steam's original ConfigStore — which may or may not have the key cached.
+
+In practice, **most games require an explicit depot key** in the Lua configuration. The Lua files from community sources almost always include them. The main exceptions where a key may not be needed are:
+
+- **Family Shared games** — Steam may already have the depot key cached if the game is owned by a family member on the same PC
+- **Free-to-play games** — Depot keys are publicly accessible
+
+OST does **not** fetch depot keys from Steam's servers automatically. It only injects keys that you (or your Lua source) have explicitly provided via the third argument in `addappid()`.
+
+#### Preloads (Unreleased Games)
+
+The encryption key for a preload is **not accessible** until the game releases. Steam downloads all encrypted chunks into `.csd` files in the `depotcache` folder, but cannot decrypt them until the key becomes available. This is why preloads must be decrypted after release — and if your disk is slow, decryption may take longer than re-downloading.
+
+#### Security Properties
+
+AES-256 is considered **quantum-resistant** — quantum algorithms like Shor's algorithm target asymmetric (public-key) encryption, not symmetric encryption like AES. Brute-forcing a 256-bit AES key would require exhausting 2²⁵⁶ possibilities — a task that would take an estimated 3×10⁵¹ years even with fifty supercomputers checking a billion billion keys per second.
 
 ### Access Token
 A key that proves you're allowed to download certain protected games or DLCs. Some games require both an AppID and an access token. Configured with `addtoken()` in Lua.

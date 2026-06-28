@@ -189,6 +189,10 @@ export default withMermaid(
                                     text: "Debug Logging",
                                     link: "/guide/advanced/debug-logging",
                                 },
+                                {
+                                    text: "Depot Keys & Steam Downloads",
+                                    link: "/guide/advanced/depot-keys",
+                                },
                             ],
                         },
                         {

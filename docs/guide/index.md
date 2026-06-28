@@ -67,4 +67,5 @@ build.bat
 | **[DLL Injection](/guide/advanced/injection)** | Game-process library injection configuration |
 | **[Steam Compatibility](/guide/advanced/steam-compat)** | Pattern system, version compatibility, remote mirrors |
 | **[Debug Logging](/guide/advanced/debug-logging)** | Log file reference and troubleshooting |
+| **[Depot Keys & Steam Downloads](/guide/advanced/depot-keys)** | Technical deep-dive into Steam's download/preload system and depot decryption |
 | **[Upcoming Features](/guide/upcoming/lua-functions)** | In-development Lua functions and features |
