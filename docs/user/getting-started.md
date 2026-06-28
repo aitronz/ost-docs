@@ -63,7 +63,7 @@ C:\Program Files (x86)\Steam\
 ```
 
 ::: warning Antivirus False Positives
-OpenSteamTool uses DLL proxy techniques that may trigger **false positives** from some antivirus software. This is common with tools that hook into game processes.
+OpenSteamTool uses DLL proxy techniques that may trigger **false positives** from some antivirus software. This is common with tools that hook into other processes.
 
 If your antivirus quarantines or blocks the DLLs:
 

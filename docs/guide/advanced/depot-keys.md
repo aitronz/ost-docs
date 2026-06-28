@@ -133,7 +133,7 @@ Quantum computing often comes up in discussions about breaking encryption. Howev
 - **AES-256** is a **symmetric** encryption algorithm and is believed to be **quantum-resistant**.
 - Quantum computers are not expected to reduce the attack time on AES-256 enough to be effective.
 
-You can read more about AES-256 quantum resistance on [qvault.io](https://www.qvault.io/cryptography/how-aes-256-works/).
+You can read more about AES-256 on [Wikipedia](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard).
 
 ## How OST Handles Depot Decryption
 
@@ -191,4 +191,4 @@ This log shows which keys are being injected and whether the injection succeeded
 - [Steamworks documentation](https://partner.steamgames.com/doc/features/workshop) — Official Steam documentation on the content system
 - [DepotDownloader](https://github.com/SteamRE/DepotDownloader) — Open-source tool for downloading Steam depots, useful reference implementation
 - [SteamDB blog: Steam download system](https://steamdb.info/blog/steam-download-system/) — Original article by the SteamDB Team
-- [How AES-256 works (qvault.io)](https://www.qvault.io/cryptography/how-aes-256-works/) — Explanation of AES-256 and quantum resistance
+- [Advanced Encryption Standard (Wikipedia)](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) — AES-256 specification and security properties

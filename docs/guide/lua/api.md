@@ -37,13 +37,13 @@ Any of the following actions trigger an automatic reload without restarting Stea
 
 ### `addappid(appid [, depotid, depotKey])`
 
-Unlock a game and optionally provide a depot decryption key.
+Unlock a game and optionally provide a depot decryption key. This is the primary function for telling OST which games to unlock.
 
 ```lua
--- Basic: unlock game with AppID 1361510
+-- Basic: unlock game with AppID 1361510 (no depot key)
 addappid(1361510)
 
--- With depot decryption key
+-- With depot decryption key (third argument)
 addappid(1361511, 0, "5954562e7f5260400040a818bc29b60b335bb690066ff767e20d145a3b6b4af0")
 
 -- Multiple games
@@ -51,6 +51,18 @@ addappid(480)
 addappid(730)
 addappid(570)
 ```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `appid` | integer | Steam AppID or depot ID. Used for both ownership tracking and depot key lookup. |
+| `depotid` | integer | **Currently unused** — reserved parameter. Pass `0`. |
+| `depotKey` | string (optional) | 64-character hex AES-256 depot decryption key. Required for most games. |
+
+#### Do I Need a Depot Key?
+
+OST does not fetch keys from Steam's servers automatically — it only injects keys you explicitly provide. **Most games require a depot key**. See **[Depot Keys & Steam Downloads](/guide/advanced/depot-keys)** for a full technical explanation of how Steam's encryption works and when keys are needed.
 
 ### `addtoken(appid, accessToken)`
 
