@@ -19,7 +19,7 @@ It explains all the technical terms used here — DLLs, AppIDs, Lua, Denuvo, and
 
 Now that you know what you're installing, follow the steps below.
 
-This guide is for **non-technical users** who just want to unlock games with OpenSteamTool. If you're a developer looking for the full technical reference, check the [Developer Guide](/guide/lua/api).
+This guide is for **non-technical users** who just want to unlock games with OpenSteamTool. If you're a developer looking for the full technical reference, check the [Advanced Guide](/guide/).
 
 ## Step 1: Close Steam
 

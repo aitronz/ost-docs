@@ -34,7 +34,7 @@ export default withMermaid(
             nav: [
                 { text: "Home", link: "/" },
                 { text: "User Guide", link: "/user/getting-started" },
-                { text: "Dev Guide", link: "/guide/lua/api" },
+                { text: "Advanced Guide", link: "/guide/" },
                 {
                     text: "Docs Repo",
                     link: "https://github.com/aitronz/ost-docs",
@@ -72,8 +72,13 @@ export default withMermaid(
                     ],
                 },
                 {
-                    text: "Developer Guide",
+                    text: "Advanced Guide",
                     items: [
+                        {
+                            text: "Overview",
+                            link: "/guide/",
+                        },
+
                         {
                             text: "Lua Scripting API",
                             link: "/guide/lua/api",
@@ -105,6 +110,10 @@ export default withMermaid(
                             collapsed: true,
                             items: [
                                 {
+                                    text: "Building from Source",
+                                    link: "/guide/advanced/build",
+                                },
+                                {
                                     text: "DLL Injection",
                                     link: "/guide/advanced/injection",
                                 },
@@ -115,10 +124,6 @@ export default withMermaid(
                                 {
                                     text: "Debug Logging",
                                     link: "/guide/advanced/debug-logging",
-                                },
-                                {
-                                    text: "Building from Source",
-                                    link: "/guide/advanced/build",
                                 },
                             ],
                         },

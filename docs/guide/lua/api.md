@@ -1,7 +1,7 @@
 # Lua Scripting
 
 ::: tip Are you a non-technical user?
-> You don't need to write Lua scripts! Get ready-made `.lua` files from community sources — just place them in your `config\lua\` folder. See the [Lua Sources guide](/user/lua-sources) for details.
+You don't need to write Lua scripts! Get ready-made `.lua` files from community sources — just place them in your `config\lua\` folder. See the [Lua Sources guide](/user/lua-sources) for details.
 :::
 
 OpenSteamTool uses Lua scripts placed in `config\lua\` to control which games to unlock, configure tickets, and manage depot decryption keys. Scripts are automatically loaded and **hot-reloaded** — no Steam restart needed.

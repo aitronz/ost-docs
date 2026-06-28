@@ -13,8 +13,8 @@ hero:
       text: User Guide
       link: /user/getting-started
     - theme: alt
-      text: Developer Guide
-      link: /guide/lua/api
+      text: Advanced Guide
+      link: /guide/
     - theme: alt
       text: View Docs Repo
       link: https://github.com/aitronz/ost-docs
@@ -23,9 +23,9 @@ features:
   - title: For Users
     details: Simple installation — download, extract, copy DLLs, get Lua files from trusted sources, and play.
     link: /user/getting-started
-  - title: For Developers
+  - title: For Advanced Users
     details: Full Lua API reference, TOML configuration, Denuvo ticket management, DLL injection, and building from source.
-    link: /guide/lua/api
+    link: /guide/
   - title: Core Unlocks
     details: Unlock unlimited unowned games and all their DLCs with auto depot decryption.
     link: /guide/features

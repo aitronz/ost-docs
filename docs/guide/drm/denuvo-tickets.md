@@ -61,7 +61,8 @@ The system uses the following priority when determining which AppTicket to use:
 1. **Explicit tickets** (highest priority)
    - Tickets configured via `setAppTicket()`
    - Existing cached `AppTicket` credential values
-2. **Forged local ConfigStore ticket** (fallback)
+2. **Legitimate account sharing** — v1.4.8+ supports automatic authorization sharing from accounts that genuinely own the game
+3. **Forged local ConfigStore ticket** (fallback)
    - OpenSteamTool falls back to forging a ticket from Steam's local ConfigStore
 
 ### SteamID Priority
@@ -126,11 +127,11 @@ Tickets are only valid when extracted from an account that **genuinely owns** th
 
 These open issues affect certain Denuvo titles and are being tracked in pull requests:
 
-| Issue | PR | Description |
-|---|---|---|
-| **SteamID offset in newer eTickets** | [#128](https://github.com/OpenSteam001/OpenSteamTool/pull/128) | Newer Denuvo games use offset 12 instead of 8 for SteamID in eTickets |
-| **ProtectionScan size floor** | [#121](https://github.com/OpenSteam001/OpenSteamTool/pull/121) | Executables under 80MB are skipped by ProtectionScan |
-| **Nonce-bound tickets** | [#148](https://github.com/OpenSteam001/OpenSteamTool/pull/148) | Strict titles require per-launch nonce-based tickets via `seteticketurl()` |
+| Issue | PR | Description | Status |
+|---|---|---|---|
+| **SteamID offset in newer eTickets** | [#128](https://github.com/OpenSteam001/OpenSteamTool/pull/128) | Newer Denuvo games use offset 12 instead of 8 for SteamID in eTickets | Resolved in v1.4.8 |
+| **ProtectionScan size floor** | [#121](https://github.com/OpenSteam001/OpenSteamTool/pull/121) | Executables under 80MB are skipped by ProtectionScan | Resolved in v1.4.8 |
+| **Nonce-bound tickets** | [#148](https://github.com/OpenSteam001/OpenSteamTool/pull/148) | Strict titles require per-launch nonce-based tickets via `seteticketurl()` | In development |
 
 See the **[Upcoming Lua Functions](/guide/upcoming/lua-functions)** page for details on the fixes and workarounds being developed for these issues.
 issues.

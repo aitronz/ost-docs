@@ -63,6 +63,18 @@ This applies to:
 - Any additional paths configured in `[lua] paths`
 - The `opensteamtool.toml` config file itself
 
+## Denuvo Compatibility
+
+OpenSteamTool supports both **SteamStub-only** games (automatic, no configuration needed) and **Denuvo-protected** games (requires ticket data). As of v1.4.8, most common save-data and SteamID mismatch issues in Denuvo games have been resolved, and **automatic authorization sharing** allows legitimate accounts to share their Denuvo authorization with other OST users.
+
+See the **[Denuvo & Tickets guide](/guide/drm/denuvo-tickets)** for full details.
+
+## Optional DLL Injection
+
+OpenSteamTool supports optional DLL injection into game processes through the `[inject]` configuration section. Supports separate x64 and x86 library paths, with automatic architecture matching. Injection is performed once per detected game process.
+
+See the **[DLL Injection guide](/guide/advanced/injection)** for configuration and use cases.
+
 ## Family Sharing Bypass
 
 OpenSteamTool can bypass Steam Family Sharing restrictions for games that have been added to the library with `addappid()`.

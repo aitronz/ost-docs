@@ -4,29 +4,69 @@
 You don't need to build OpenSteamTool. Pre-built binaries are available from the [releases page](https://github.com/OpenSteam001/OpenSteamTool/releases). Only build from source if you want to modify the code or develop features.
 :::
 
-## Requirements
+## Prerequisites
 
-- **OS:** Windows 10/11
-- **CMake** 3.20+
-- **Visual Studio 2022** with MSVC (x64 toolchain)
+- **OS:** Windows 10/11 (64-bit)
+- **Visual Studio 2022** with the **Desktop development with C++** workload (MSVC x64 toolchain)
+- **CMake** 3.20+ (the `build.bat` script auto-detects Ninja or falls back to Visual Studio)
 
-## Runtime Requirements
+### Verifying Your Setup
 
-- Outbound HTTPS access to `raw.githubusercontent.com` on first launch after a Steam update (for pattern downloading). After the first successful fetch, patterns are cached.
+```powershell
+# Check CMake version
+cmake --version
+
+# Check Visual Studio (should list 2022)
+"%ProgramFiles%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property catalog_productLineVersion
+
+# Check MSVC compiler
+cl
+```
+
+## Getting the Source
+
+Clone the repository recursively (the build fetches dependencies via CMake FetchContent, so no submodules are needed):
+
+```powershell
+git clone https://github.com/OpenSteam001/OpenSteamTool.git
+cd OpenSteamTool
+```
 
 ## Quick Build
 
-From the project root directory:
+From the project root:
 
 ```powershell
 build.bat
 ```
 
-This will compile both Debug and Release configurations.
+This builds both **Debug** and **Release** configurations. The first build takes longer because CMake downloads and compiles dependencies (Lua, Protobuf, spdlog, tomlplusplus, Microsoft Detours).
+
+### What build.bat Does
+
+1. Detects the best CMake generator — **Ninja Multi-Config** (if `ninja` is on PATH) or **Visual Studio 17 2022**
+2. Configures the project: `cmake -S src -B build`
+3. Builds both configurations: `cmake --build build --config Release` then `--config Debug`
+4. Builds the `extract_tickets` tool for each configuration
+
+### Building Only One Configuration
+
+```powershell
+set CONFIGS=Release
+build.bat
+```
+
+Or manually:
+
+```powershell
+cmake -S src -B build
+cmake --build build --config Release
+cmake --build build --config Release --target extract_tickets
+```
 
 ## Output
 
-After building, you'll find the DLLs in:
+After building, the DLLs are in:
 
 | Configuration | Path |
 |---|---|
@@ -37,40 +77,140 @@ After building, you'll find the DLLs in:
 | | `build/Release/dwmapi.dll` |
 | | `build/Release/xinput1_4.dll` |
 
-## Building Tools
+The `extract_tickets` tool lands separately at `build/tools/Release/extract_tickets.exe` (it's marked `EXCLUDE_FROM_ALL` so it doesn't pollute the main output directory).
 
-The `extract_tickets` tool is built as part of the main build process. After building, the binary is located at:
+## Installing a Custom Build
 
-```
-build/tools/Release/extract_tickets.exe
-```
+1. **Close Steam** fully (system tray → Exit)
+2. Copy `OpenSteamTool.dll`, `dwmapi.dll`, and `xinput1_4.dll` from your build output into your Steam root directory (where `steam.exe` lives)
+3. Create `config\lua\` inside the Steam directory if it doesn't exist
+4. Launch Steam — your build runs automatically
+
+To revert to an official release, just replace those three DLLs with the ones from the release ZIP.
 
 ## Project Structure
 
 ```
 OpenSteamTool/
 ├── src/
-│   ├── dllmain.cpp          -- Entry point
-│   ├── dllmain.h
-│   ├── Hook/                -- Steam API hooking
-│   ├── OSTPlatform/         -- Platform-specific code
-│   ├── Pipe/                -- IPC pipe handling
-│   ├── Steam/               -- Steam client interaction
-│   ├── Utils/               -- Utility functions
-│   ├── cmake/               -- CMake configuration
-│   ├── dwmapi/              -- dwmapi.dll proxy
-│   ├── proto/               -- Protocol buffers
-│   └── xinput1_4/           -- xinput1_4.dll proxy
+│   ├── CMakeLists.txt           -- Top-level CMake build definition
+│   ├── dllmain.cpp              -- DLL entry point (DllMain)
+│   ├── Hook/                    -- Steam API hook modules (one per subsystem)
+│   ├── OSTPlatform/             -- OS-specific backends (Windows registry, processes)
+│   ├── Pipe/                    -- Inter-process communication with Steam
+│   │   └── Features/            -- Self-contained features (Denuvo auth, injection)
+│   ├── Steam/                   -- Steam client interface definitions (IPC messages)
+│   ├── Utils/                   -- Shared utilities
+│   │   ├── Config/              -- TOML config loader, Lua config loader, file watchers
+│   │   ├── Logging/             -- Per-module debug logging
+│   │   ├── SteamMetadata/       -- Pattern downloading, manifest fetching, diagnostics
+│   │   └── Tickets/             -- AppTicket parsing
+│   ├── cmake/                   -- CMake dependency recipes (FindLua.cmake, etc.)
+│   ├── dwmapi/                  -- dwmapi.dll proxy loader
+│   ├── proto/                   -- Protocol Buffer definitions (Steam messages)
+│   └── xinput1_4/               -- xinput1_4.dll proxy loader
 ├── tools/
-│   ├── extract_tickets/     -- Ticket extraction tool
-│   └── ipc_codegen/         -- IPC code generator
-├── docs/                    -- Documentation assets
-├── build.bat                -- Build script
-└── CMakeLists.txt           -- Root CMake configuration
+│   ├── extract_tickets/         -- Ticket dumper (run on an account that owns the game)
+│   └── ipc_codegen/             -- IPC message struct code generator
+├── build.bat                    -- One-click build script
+├── opensteamtool.example.toml   -- Example config with all options documented
+└── docs/                        -- Project assets (logos)
 ```
 
-## After Building
+### Key Source Directories
 
-1. Copy all files from the build output folder to your Steam root directory
-2. Create `config/lua/` in the Steam directory
-3. Write Lua scripts and launch Steam
+| Directory | Purpose |
+|---|---|
+| `Hook/` | Contains one file per Steam subsystem being hooked (IPC, net packets, decryption keys, manifests, packages, SteamUI, etc.) |
+| `Pipe/` | Manages the named-pipe handshake between OST and Steam processes. Features that run inside the game process (Denuvo authorization, library injection) live under `Pipe/Features/` |
+| `OSTPlatform/` | Abstracts platform-specific operations: Windows Registry access, process enumeration, remote memory operations |
+| `Utils/Config/` | Parses `opensteamtool.toml` and `.lua` files, watches them for changes (hot reload) |
+| `Utils/SteamMetadata/` | Downloads pattern files from `steam-monitor`, fetches manifests, and reports Steam diagnostics |
+| `dwmapi/` and `xinput1_4/` | Small proxy DLLs that Steam loads instead of the real Windows DLLs. They locate and load `OpenSteamTool.dll` |
+
+## Development Workflow
+
+### Edit-Compile-Test Loop
+
+1. Edit source files in `src/`
+2. Run `build.bat` (builds both configs) or `cmake --build build --config Debug` (faster)
+3. Copy the three DLLs to your Steam folder
+4. Launch Steam and test
+5. Check `<Steam>\opensteamtool\*.log` for debug output (Debug build only)
+
+### Debug Build vs Release Build
+
+| | Debug | Release |
+|---|---|---|
+| **Logging** | Full per-module logging to `<Steam>/opensteamtool/*.log` | Logging compiled out (no-ops) |
+| **Protobuf** | Links full `libprotobuf` | Links `libprotobuf-lite` (smaller) |
+| **Optimization** | None (easier to step through) | Full optimizations |
+| **Use case** | Development, troubleshooting | Daily use |
+
+### Using the Debug Build
+
+The Debug build writes detailed logs. Set the log level in `opensteamtool.toml`:
+
+```toml
+[log]
+level = "debug"  # Options: trace, debug, info, warn, error
+```
+
+See the **[Debug Logging guide](/guide/advanced/debug-logging)** for a full list of log files and what each one contains.
+
+### Dependency Management
+
+Dependencies are fetched automatically by CMake's **FetchContent** and cached in `<repo-root>/.deps/`:
+
+| Dependency | Used for |
+|---|---|
+| **Lua** (5.4) | Lua config loading and execution |
+| **Protobuf** | Steam message serialization/deserialization |
+| **spdlog** | Debug logging (Debug build only) |
+| **tomlplusplus** | TOML config parsing |
+| **Microsoft Detours** | API hooking (not directly fetched — included in-source) |
+
+To clean and re-fetch dependencies, delete the `.deps/` directory and rebuild.
+
+## Building Tools
+
+### extract_tickets
+
+Built automatically by `build.bat`. The binary ends up at:
+
+```
+build/tools/Release/extract_tickets.exe
+```
+
+Run it on a machine where Steam is logged into an account that **owns** the target game:
+
+```powershell
+extract_tickets.exe 1361510
+```
+
+Output is written to an `<appid>/` folder next to the executable. See the **[extract_tickets](#)** section for full usage.
+
+### IPC Code Generator
+
+The `ipc_codegen` tool generates C++ structs from IPC message definitions (`IPCMessages.steamd`). It runs automatically during the CMake build — you only need to interact with it if you're modifying the IPC protocol.
+
+## Troubleshooting Build Issues
+
+### CMake fails with "Could not find compiler"
+
+Make sure you ran **Developer Command Prompt for VS 2022** or have run `vcvarsall.bat x64` before building. The `build.bat` script can also be run from a regular PowerShell if Visual Studio is detected via `vswhere`.
+
+### FetchContent fails to download dependencies
+
+- Check your internet connection
+- If behind a proxy, configure `HTTP_PROXY` and `HTTPS_PROXY` environment variables
+- Delete `.deps/` and try again — corrupted cache can cause failures
+
+### Linker errors (LNK2019/LNK2001)
+
+- Clean and rebuild: delete `build/` and `.deps/`, then run `build.bat` again
+- Make sure you're using the x64 toolchain (the project does not support x86 builds)
+
+### "No pattern found" after building
+
+Your custom build still needs to download pattern files from `steam-monitor` for your Steam version. This is normal — it happens on every first launch after a Steam update regardless of whether you built from source or used a release.
