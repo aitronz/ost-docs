@@ -1,0 +1,119 @@
+.vp-doc {
+    max-width: 820px;
+    margin: 0 auto;
+}
+
+.vp-doc h2 {
+    margin-top: 3rem;
+}
+
+.vp-doc h3 {
+    margin-top: 2rem;
+}
+
+.vp-doc h4 {
+    margin-top: 1.5rem;
+}
+
+.vp-doc p {
+    line-height: 1.75;
+}
+
+.custom-block.info {
+    border-left: 4px solid var(--vp-c-brand-1);
+    background-color: color-mix(
+        in srgb,
+        var(--vp-c-brand-1) 8%,
+        var(--vp-c-bg)
+    );
+}
+
+.custom-block.tip {
+    border-left: 4px solid var(--vp-c-green-1);
+    background-color: color-mix(
+        in srgb,
+        var(--vp-c-green-1) 8%,
+        var(--vp-c-bg)
+    );
+}
+
+.vp-doc table {
+    display: table;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--vp-c-gutter);
+}
+
+.vp-doc th {
+    background-color: color-mix(
+        in srgb,
+        var(--vp-c-brand-1) 12%,
+        var(--vp-c-bg)
+    );
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    padding: 12px 16px;
+}
+
+.vp-doc td {
+    padding: 10px 16px;
+}
+
+.vp-doc tr:nth-child(even) td {
+    background-color: color-mix(
+        in srgb,
+        var(--vp-c-bg-soft) 50%,
+        var(--vp-c-bg)
+    );
+}
+
+.vp-doc div[class*="language-"] {
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--vp-c-gutter);
+}
+
+.mermaid {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 1rem;
+    background: var(--vp-c-bg-soft);
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    border: 1px solid var(--vp-c-divider);
+}
+
+
+.VPHero .tagline {
+    font-size: 1.25rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.VPFeature {
+    border-radius: 10px;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.VPFeature:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px
+        color-mix(in srgb, var(--vp-c-brand-1) 15%, transparent);
+}
+
+.VPSidebar .group + .group {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+}
+
+
+@media (max-width: 640px) {
+    .vp-doc table {
+        font-size: 0.875rem;
+    }
+}
