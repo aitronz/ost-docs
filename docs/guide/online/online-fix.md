@@ -73,7 +73,7 @@ See the **[Companion DLL (Early)](/guide/upcoming/companion-dll)** and **[Upcomi
 
 For games that don't work with the built-in `-onlinefix` or the companion DLL, pre-packaged online patches are available at [online-fix.me](https://online-fix.me/). These are standalone fixes that you extract directly into your game folder — no OST configuration needed.
 
-See the **[User Guide](/user/getting-started#method-2-online-fixme-broader-compatibility)** for step-by-step instructions.
+See the **[Playing Online guide](/user/online-play)** for step-by-step instructions.
 
 ## Community Tips
 

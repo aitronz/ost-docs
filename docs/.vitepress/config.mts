@@ -65,6 +65,10 @@ export default withMermaid(
                             text: "Lua Sources",
                             link: "/user/lua-sources",
                         },
+                        {
+                            text: "Playing Online",
+                            link: "/user/online-play",
+                        },
                     ],
                 },
                 {
