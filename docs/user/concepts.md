@@ -53,7 +53,7 @@ addappid(570)
 You don't need to know how to program — you can download ready-made Lua files from community sources. See the **[Lua Sources guide](/user/lua-sources)** for details.
 
 ### Lua Sources
-Websites that generate `.lua` configuration files for specific games. The two main sources are **Hubcap** and **Ryuu** — they provide the `addappid()` and `addtoken()` calls needed to unlock games. See the **[Lua Sources guide](/user/lua-sources)** for step-by-step instructions, ratings, and download limits.
+Websites that generate `.lua` configuration files for specific games. They provide the `addappid()` and `addtoken()` calls needed to unlock games. See the **[Lua Sources guide](/user/lua-sources)** for step-by-step instructions, ratings, and download limits.
 
 ### DLC (Downloadable Content)
 Extra content for a game, like expansion packs, skins, or season passes. Each DLC has its own AppID. OST can unlock DLCs for games you've configured.
