@@ -2,6 +2,8 @@
 
 OpenSteamTool needs `.lua` files to know which games to unlock. You can get these from two community sources — **no programming required**.
 
+Once downloaded, `.lua` files go into the `config\lua\` folder **inside your Steam root directory** (where `steam.exe` is, typically `C:\Program Files (x86)\Steam\config\lua\`).
+
 ## Recommended Sources
 
 | Source | Rating | Daily Limit | URL | Notes |
@@ -23,7 +25,7 @@ OpenSteamTool needs `.lua` files to know which games to unlock. You can get thes
    ![Hubcap download](/images/lua-guides/hubcap-download.png)
 
 6. Extract the `.lua` file from the downloaded zip file (ignore any other files)
-7. Place the `.lua` file in `config\lua\`
+7. Place the `.lua` file in `config\lua\` inside your Steam root directory (e.g. `C:\Program Files (x86)\Steam\config\lua\`)
 
 ## Ryuu
 
@@ -38,7 +40,7 @@ OpenSteamTool needs `.lua` files to know which games to unlock. You can get thes
 
    ![Ryuu download](/images/lua-guides/ryuu-download.png)
 
-6. Place the `.lua` file in `config\lua\`
+6. Place the `.lua` file in `config\lua\` inside your Steam root directory (e.g. `C:\Program Files (x86)\Steam\config\lua\`)
 
 ::: warning Only take the .lua file
 From the downloaded archive, take **only the `.lua` file**. Do not grab manifest files, executables, installers, or other files. Let OST download everything else it needs on its own.
@@ -84,4 +86,4 @@ addappid(1361511, 0, "5954562e7f5260400040a818bc29b60b335bb690066ff767e20d145a3b
 addtoken(1361510, "2764735786934684318")
 ```
 
-You can have multiple `.lua` files in `config\lua\` — one per game or all in one. OST loads them all automatically.
+You can have multiple `.lua` files in `config\lua\` (inside your Steam root directory) — one per game or all in one. OST loads them all automatically.
