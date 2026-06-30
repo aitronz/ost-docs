@@ -1,9 +1,5 @@
 # Lua Scripting
 
-::: tip Are you a non-technical user?
-You don't need to write Lua scripts! Get ready-made `.lua` files from community sources — just place them in your `config\lua\` folder. See the [Lua Sources guide](/user/lua-sources) for details.
-:::
-
 OpenSteamTool uses Lua scripts placed in `config\lua\` to control which games to unlock, configure tickets, and manage depot decryption keys. Scripts are automatically loaded and **hot-reloaded** — no Steam restart needed.
 
 ## Script Location
@@ -62,7 +58,7 @@ addappid(570)
 
 #### Do I Need a Depot Key?
 
-OST does not fetch keys from Steam's servers automatically — it only injects keys you explicitly provide. **Most games require a depot key**. See **[Depot Keys & Steam Downloads](/guide/advanced/depot-keys)** for a full technical explanation of how Steam's encryption works and when keys are needed.
+OST does not fetch keys from Steam's servers automatically — it only injects keys you explicitly provide. **Most games require a depot key**. See the **[Depot Keys & Steam Downloads](/guide/advanced/depot-keys)** guide for a full technical deep-dive into Steam's encryption, preloads, and how OST handles decryption.
 
 ### `addtoken(appid, accessToken)`
 
@@ -146,7 +142,7 @@ This applies to every registered function (`addappid`, `addtoken`, `setManifesti
 
 ## Manifest via Lua
 
-You can override the upstream manifest API by defining a Lua function in your scripts.
+You can override the upstream manifest API by defining a Lua function in your scripts. When Steam needs a manifest request code, the C++ runtime checks for these Lua callbacks **before** falling back to the configured HTTP provider.
 
 ### `fetch_manifest_code(gid)`
 
@@ -176,16 +172,35 @@ function fetch_manifest_code_ex(app_id, depot_id, gid)
 end
 ```
 
+#### ⚠️ Important: 64-Bit Precision
+
+Manifest request codes and GIDs are **64-bit unsigned integers**. Standard Lua uses double-precision floats for numbers, which can only represent integers up to 2⁵³ (~9 quadrillion) accurately. Values above this threshold will silently lose precision if returned as a `number`.
+
+**Always return manifest codes as strings** containing decimal digits:
+
+```lua
+-- ✅ Correct: return as string
+function fetch_manifest_code(gid)
+    local body, st = http_get("https://your-api.com/manifest/" .. gid)
+    if st == 200 and body then
+        return tostring(body)  -- ensure it's a string
+    end
+    return nil
+end
+```
+
+The C++ runtime uses a custom `ParseUInt64Decimal` helper (backed by `std::stoull`) to safely convert the returned string back to a `uint64_t`.
+
 ### Built-in HTTP Helpers
 
-The C++ runtime provides two Lua helper functions:
+The C++ runtime provides two Lua helper functions backed by the `WinHttp` utility:
 
 | Function | Signature | Returns |
 |---|---|---|
 | `http_get` | `http_get(url [, headers])` | `body, status_code` |
 | `http_post` | `http_post(url, body [, headers])` | `body, status_code` |
 
-`headers` is an optional table in the format `{["Key"]="Value", ...}`.
+`headers` is an optional table in the format `{["Key"]="Value", ...}`. The Lua table is converted to Windows HTTP headers via a `LuaHeadersToWstr` helper that constructs `Key: Value\r\n` pairs.
 
 **Example — trying multiple manifest APIs with fallback:**
 
@@ -193,7 +208,7 @@ The C++ runtime provides two Lua helper functions:
 function fetch_manifest_code(gid)
     -- Try wudrm (returns plain-text uint64)
     local body, st = http_get("http://gmrc.wudrm.com/manifest/" .. gid)
-    if st == 200 and body then return body end
+    if st == 200 and body then return tostring(body) end
 
     -- Fall back to steamrun (returns JSON)
     body, st = http_get("https://manifest.steam.run/api/manifest/" .. gid)

@@ -55,9 +55,21 @@ For a game with AppId `1361510`, the Steam launch parameters would look like:
 
 This tells Steam to pass `-onlinefix` to the game process, which OST intercepts to apply the online fix.
 
-## Technical Note
+## Technical Details
 
-The feature works by intercepting the `-onlinefix` flag at the OST level and applying a 480 AppId spoof for network packets. This allows Steam lobby APIs to function for games that don't normally have online privileges.
+### How It Works
+
+The OnlineFix intercepts two network packet hooks to enable multiplayer:
+
+1. **`CMsgClientGamesPlayed` Patching (Outgoing)** — When OST detects the `-onlinefix` flag, it hooks the `BBuildAndAsyncSendFrame` function and intercepts `CMsgClientGamesPlayed` (eMsg 1003) packets. It clears the `games_played` list, preventing Steam from reporting the actual game being played to its servers. This is required for certain multiplayer bypasses.
+
+2. **AppID 480 Spoofing** — For network packets related to Steam lobby matchmaking, the AppId is spoofed to 480 (Spacewar, owned by every account) while preserving the real game title in metadata. This allows Steamworks P2P networking to function for otherwise unowned titles.
+
+### Limitations
+
+- Only affects **Steamworks API calls** (lobbies, P2P networking)
+- Games using EOS, dedicated servers, or custom P2P layers bypass Steam entirely and cannot be intercepted at this level
+- A future **Companion DLL** (injected directly into game processes) will extend support to in-process matchmaking services
 
 ## Upcoming Improvements
 

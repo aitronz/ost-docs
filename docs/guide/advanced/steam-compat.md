@@ -7,8 +7,30 @@ OpenSteamTool no longer ships byte-pattern signatures inside the DLL. Instead, i
 On each launch, OpenSteamTool:
 
 1. **Computes SHA-256** of `steamclient64.dll` and `steamui.dll` on disk
-2. **Looks up** a matching pattern file from the upstream tracker
-3. **Applies** the resolved offsets to hook Steam's internal APIs
+2. **Looks up** a matching pattern file (TOML) from the upstream tracker
+3. **Resolves** function addresses using the pattern data
+4. **Applies** the resolved offsets to hook Steam's internal APIs
+
+### Pattern Resolution
+
+Each pattern TOML contains `PatternEntry` records with the following fields:
+
+| Field | Description |
+|-------|-------------|
+| `name` | Human-readable function name (e.g., "BBuildAndAsyncSendFrame") |
+| `rva` | Relative Virtual Address — if provided, the address is calculated by adding this offset to the module base, bypassing the need for a scan |
+| `sig` | IDA-style hex byte pattern (e.g., `48 89 ? ? 57 48 81 ? ? ? ? ?`) used as a fallback if the RVA is absent or invalid |
+
+The resolution order is:
+
+1. **RVA lookup** — fastest, direct offset calculation
+2. **Signature scan** — sliding-window comparison against the module's memory, with `??` as wildcards for bytes that change between builds
+
+Function names are looked up using **FNV-1a hashing** for efficient map access.
+
+### Error Handling
+
+If a pattern TOML fails to download (e.g., HTTP 404), the module is added to `g_failedModules` and a popup informs the user. If specific functions within a successfully loaded module cannot be found, they're tracked in `g_missingFunctions` and reported after all hooks have attempted to install. OST continues working — only the hooks tied to missing functions are disabled.
 
 ## Lookup Order
 

@@ -2,6 +2,10 @@
 
 Debug builds of OpenSteamTool write detailed per-module log files under `<Steam>/opensteamtool/`. These are invaluable for troubleshooting.
 
+::: info Zero-Cost in Release Builds
+Logging is **completely compiled out** in Release builds — all logging macros are stubbed to `((void)0)` via preprocessor guards. This means zero runtime overhead for everyday use. Only the Debug variant writes log files.
+:::
+
 ## Enabling Debug Logging
 
 Download the **Debug** variant of the release (e.g. `OpenSteamTool-x.x.x-Debug.zip`).
@@ -33,6 +37,7 @@ All logs are written to `<Steam>/opensteamtool/`:
 | `package.log` | `LOG_PACKAGE_*` | Package injection, FileWatcher events |
 | `onlinefix.log` | `LOG_ONLINEFIX_*` | Online fix (480 AppId spoofing) |
 | `richpresence.log` | `LOG_RICHPRESENCE_*` | Rich Presence packet construction and injection |
+| `winhttp.log` | `LOG_WINHTTP_*` | HTTP requests for manifest codes via WinHttp |
 | `steamui.log` | `LOG_STEAMUI_*` | SteamUI hook diagnostics |
 | `pipe.log` | `LOG_PIPE_*` | Pipe handshakes, process inspection, Denuvo authorization, library injection |
 | `platform.log` | `LOG_PLATFORM_*` | Platform helper diagnostics, remote-process operations |

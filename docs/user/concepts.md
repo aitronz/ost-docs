@@ -31,8 +31,12 @@ The folder where Steam is installed. This is where `steam.exe` lives. Typically 
 ### DLL (Dynamic Link Library)
 A file containing code that programs can load and use. Windows uses DLLs everywhere to share code between programs. OST provides custom DLLs that Steam loads instead of the real Windows ones.
 
-### Proxy DLL
+### Proxy DLL (DLL Hijacking)
 A DLL that has the same name as a system DLL but forwards most calls to the original while intercepting specific ones. OST uses `dwmapi.dll` and `xinput1_4.dll` as proxy DLLs — Steam loads them instead of the real Windows DLLs, giving OST control without Steam knowing.
+
+Both loaders include a **process guard** that verifies the host is `steam.exe` before loading OST — preventing injection into games or other processes.
+
+See the [Advanced Guide](/guide/) for technical details on how the proxy DLLs work.
 
 ### AppID
 A unique number that identifies every game on Steam. For example:
@@ -77,12 +81,14 @@ A cryptographic hash — essentially a unique fingerprint of a file. OST uses SH
 ### Pattern / Pattern File
 A file that tells OST where to find specific functions in Steam's code. Since Steam updates frequently (sometimes weekly), OST cannot hardcode these locations. Instead, it downloads fresh patterns on each launch from the [steam-monitor](https://github.com/OpenSteam001/steam-monitor) repository. This is why you might see "No pattern found" after a Steam update — it just means the pattern database hasn't caught up yet.
 
+See the [Steam Compatibility](/guide/advanced/steam-compat) page for technical details on the lookup system.
+
 ## Configuration — What Goes in Your Lua Files
 
 These are the functions and terms you'll encounter when setting up game unlocks.
 
 ### addappid()
-The main Lua function you use to tell OST which games to unlock. Example: `addappid(1361510)` unlocks the game with AppID `1361510`. You can also provide a **depot decryption key** in the same call.
+The main Lua function you use to tell OST which games to unlock. Example: `addappid(1361510)` unlocks the game with AppID `1361510`. You can optionally provide a **depot decryption key** as the third argument.
 
 ### Depot
 A "depot" is a chunk of a game's files on Steam. A single game may have multiple depots for different purposes:
@@ -91,45 +97,29 @@ A "depot" is a chunk of a game's files on Steam. A single game may have multiple
 - Language packs
 - Redistributable packages (DirectX, Visual C++, etc.)
 
-OST can unlock and decrypt individual depots. The depot system is why a single `addappid()` call can include a depot ID and a decryption key.
-
-#### How Depots Work Under the Hood
-
-Every depot has a **depot manifest** — a file that acts as the table of contents for that depot. The manifest is identified by a unique 64-bit ID and contains:
-- The **file list** (encrypted file names, sizes, hashes, and flags)
-- **Chunk metadata** for each file (chunk ID, adler32 checksum, offset, compressed and uncompressed sizes)
-
-Each file in a depot is split into roughly **one-megabyte chunks**. Each chunk is:
-1. Compressed with **LZMA** (a high-ratio compression algorithm)
-2. Encrypted with **AES-256** (a strong symmetric encryption standard)
-
-All chunks in a depot share the same encryption key. This key is **unique to the depot** but the **same for all Steam users** — which is what allows CDNs and LAN caches to efficiently cache content.
+OST can unlock and decrypt individual depots. See the [Depot Keys & Steam Downloads](/guide/advanced/depot-keys) page for technical details on how Steam's depot system works under the hood.
 
 ### Decryption Key (Depot Key)
-A secret 256-bit key needed to decrypt a game's depot files after downloading. Steam encrypts every depot chunk with AES-256, and the decryption key is what unlocks them. It looks like a long hex string:
+A secret key needed to decrypt a game's depot files after downloading. It looks like a long hex string:
 
 ```
 5954562e7f5260400040a818bc29b60b335bb690066ff767e20d145a3b6b4af0
 ```
 
-#### How Keys Are Managed
+You provide it as the third argument in `addappid()`:
 
-OST hooks into Steam's `ConfigStoreGetBinary` function to intercept requests for depot decryption keys. When a key is provided in Lua, OST injects it directly into Steam's decryption engine. If no key is provided for a depot, OST lets the request pass through to Steam's original ConfigStore — which may or may not have the key cached.
+```lua
+addappid(1361511, 0, "5954562e7f5260400040a818bc29b60b335bb690066ff767e20d145a3b6b4af0")
+```
 
-In practice, **most games require an explicit depot key** in the Lua configuration. The Lua files from community sources almost always include them. The main exceptions where a key may not be needed are:
+**Most games require a depot key.** OST does not fetch keys from Steam's servers automatically — it only injects keys you explicitly provide. The main cases where a key may not be needed are:
 
-- **Family Shared games** — Steam may already have the depot key cached if the game is owned by a family member on the same PC
-- **Free-to-play games** — Depot keys are publicly accessible
+- **Family Shared games** — Steam may already have the key cached from the owning account
+- **Free-to-play games** — Keys are publicly accessible
 
-OST does **not** fetch depot keys from Steam's servers automatically. It only injects keys that you (or your Lua source) have explicitly provided via the third argument in `addappid()`.
+For preloaded (unreleased) games, the encryption key is **not accessible** until the game releases. Steam downloads encrypted files in advance but cannot decrypt them until the key becomes available.
 
-#### Preloads (Unreleased Games)
-
-The encryption key for a preload is **not accessible** until the game releases. Steam downloads all encrypted chunks into `.csd` files in the `depotcache` folder, but cannot decrypt them until the key becomes available. This is why preloads must be decrypted after release — and if your disk is slow, decryption may take longer than re-downloading.
-
-#### Security Properties
-
-AES-256 is considered **quantum-resistant** — quantum algorithms like Shor's algorithm target asymmetric (public-key) encryption, not symmetric encryption like AES. Brute-forcing a 256-bit AES key would require exhausting 2²⁵⁶ possibilities — a task that would take an estimated 3×10⁵¹ years even with fifty supercomputers checking a billion billion keys per second.
+See the [Depot Keys & Steam Downloads](/guide/advanced/depot-keys) page for a full technical deep-dive into Steam's encryption system.
 
 ### Access Token
 A key that proves you're allowed to download certain protected games or DLCs. Some games require both an AppID and an access token. Configured with `addtoken()` in Lua.

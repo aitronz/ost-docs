@@ -128,6 +128,41 @@ OpenSteamTool/
 | `Utils/SteamMetadata/` | Downloads pattern files from `steam-monitor`, fetches manifests, and reports Steam diagnostics |
 | `dwmapi/` and `xinput1_4/` | Small proxy DLLs that Steam loads instead of the real Windows DLLs. They locate and load `OpenSteamTool.dll` |
 
+## Build System Internals
+
+### Static MSVC Runtime
+
+The project enforces the **static MSVC runtime** (`/MT` for Release, `/MTd` for Debug) via `CMAKE_MSVC_RUNTIME_LIBRARY`. This is set before any dependencies are included so they inherit the same configuration. This ensures `OpenSteamTool.dll` has **no external runtime dependencies** — it works on any Windows 10/11 system without requiring specific MSVC Redistributables.
+
+### FetchCache Mechanism
+
+Dependencies are managed via CMake's `FetchContent` and cached locally in `<repo>/.deps/`. A custom `FetchCache.cmake` module:
+
+1. Checks if a dependency source directory already exists in `.deps/`
+2. If so, sets `FETCHCONTENT_SOURCE_DIR_<NAME>` to bypass download and subbuild
+3. Sets `FETCHCONTENT_UPDATES_DISCONNECTED` to `ON` after the initial populate
+
+To clean and re-fetch all dependencies, delete the `.deps/` directory and rebuild.
+
+### Protobuf Dual-Variant Strategy
+
+OpenSteamTool generates **two different** sets of C++ classes from the same `steam_messages.proto` file:
+
+| Variant | Build | Protoc Flag | Linked Library | Features |
+|---------|-------|-------------|----------------|----------|
+| **Full** | Debug | `--cpp_out` | `libprotobuf` | `DebugString()`, reflection, descriptors |
+| **Lite** | Release | `--cpp_out=lite:` | `libprotobuf-lite` | Smaller binary, no reflection |
+
+This significantly reduces the Release DLL footprint while keeping full debugging capability in the Debug build.
+
+### IPC Code Generation
+
+The project includes a host-side `ipc_codegen` tool (in `tools/ipc_codegen/`) that parses `IPCMessages.steamd` to generate C++ structures for the IPC hook layer. It runs automatically during the CMake build. Output is isolated to a per-config directory (`${CMAKE_CURRENT_BINARY_DIR}/generated/$<CONFIG>`) to prevent conflicts between Debug and Release builds in multi-config generators.
+
+### Log Macro Generation
+
+The `LogMacros.cmake` script reads the X-macro registry in `ost_log_modules.h` and auto-generates `LOG_<MODULE>_LEVEL(...)` macros. This ensures adding a new log module only requires a single line change in the registry.
+
 ## Development Workflow
 
 ### Edit-Compile-Test Loop

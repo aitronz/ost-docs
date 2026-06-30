@@ -100,6 +100,10 @@ Controls how depot manifest request codes are obtained.
 | `timeout_send_ms` | integer | `10000` | Request send timeout |
 | `timeout_recv_ms` | integer | `10000` | Response receive timeout |
 
+#### Logic Precedence
+
+The `url` setting is a **fallback**. The `ManifestClient::FetchManifestRequestCode` function first checks if a Lua callback (`fetch_manifest_code_ex` or `fetch_manifest_code`) is defined in your scripts. If Lua returns a valid code, the upstream URL is ignored entirely.
+
 ### `[stats]`
 
 Controls the stats/achievements API.

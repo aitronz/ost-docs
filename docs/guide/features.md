@@ -10,6 +10,20 @@ addappid(730)    -- Unlock "Counter-Strike 2"
 addappid(570)    -- Unlock "Dota 2"
 ```
 
+### How Ownership Spoofing Works
+
+When you call `addappid()`, OST doesn't just flip a switch — it actively tricks Steam into believing you own the game through multiple layers:
+
+1. **Fake License Injection** — Steam organizes ownership through "Packages." OST intercepts `GetPackageInfo` and injects your configured AppIds into Package ID 0 (a special internal package) by directly appending them to Steam's `CUtlVector<AppId_t>` memory. This is done via `InitFakeLicenseOnce`.
+
+2. **Ownership Check Spoofing** — OST hooks `CheckAppOwnership`, the function Steam uses every time it needs to verify if you own a game. For any AppId registered via `addappid()`, it overwrites the `AppOwnership` struct to set `bOwnsLicense = true` and `ReleaseState = Released`, then returns success.
+
+3. **UI Visibility** — It sets `bFreeLicense = false` so the game appears in your library as a normally owned title rather than a free trial.
+
+4. **AppInfo Bypass** — OST hooks `GetOrAddAppData` to set `bSkipFlag = true` on unresolved apps, preventing Steam from waiting indefinitely for license metadata updates that will never arrive for spoofed IDs.
+
+5. **Dynamic Updates** — When you hot-reload a `.lua` file, `NotifyLicenseChanged` removes old depots and adds new ones on-the-fly using Steam's own `MarkLicenseAsChanged` and `ProcessPendingLicenseUpdates` functions — no restart needed.
+
 ### Depot Decryption Keys
 
 For games that require depot decryption, you can provide the key directly in the `addappid` call:
@@ -22,11 +36,15 @@ The key is loaded automatically from the Lua config — no separate key file nee
 
 ### Protected Content (Access Tokens)
 
-Some protected games or DLCs require an access token to download. Use `addtoken()`:
+Some protected games or DLCs require a **PICS access token** to download. Steam's Product Information Control System (PICS) is responsible for verifying you're allowed to access specific app metadata. OST intercepts the `CMsgClientPICSProductInfoRequest` network packet and injects the token before it reaches Steam's servers.
+
+Use `addtoken()`:
 
 ```lua
 addtoken(1361510, "2764735786934684318")
 ```
+
+OST stores tokens in `AccessTokenSet` and patches the outgoing protobuf message on the fly, setting the `access_token` field for matching AppIds.
 
 ### Manifest Download
 
@@ -47,12 +65,16 @@ url = "opensteamtool"
 
 ### Manifest Binding (Prevent Updates)
 
+Steam determines which files to download by looking up a depot's **Manifest GID** — a 64-bit identifier for a specific version snapshot. Normally, Steam always fetches the latest manifest. OST can override this by hooking the internal `BuildDepotDependency` function and injecting custom manifest GIDs into the `CUtlVector<DepotEntry>` that Steam constructs.
+
 Use `setManifestid()` to pin a specific depot manifest, preventing a game from being updated:
 
 ```lua
 setManifestid(1361511, "5656605350306673283")
 setManifestid(1361511, "5656605350306673283", 12345678) -- with explicit size
 ```
+
+If the size is set to `0`, OST preserves the original size so Steam's UI still shows the correct download size. This is useful for downgrading a game to a specific version while avoiding visual inconsistencies.
 
 ## Hot Reload
 
@@ -62,6 +84,31 @@ This applies to:
 - `<Steam>/config/lua/` (default directory)
 - Any additional paths configured in `[lua] paths`
 - The `opensteamtool.toml` config file itself
+
+### How It Works
+
+The `FileWatcher` subsystem uses the Windows `ReadDirectoryChangesW` API with asynchronous I/O (`OVERLAPPED`) to monitor directories on a background worker thread.
+
+#### Debouncing
+
+To handle rapid file saves common in text editors, the system implements a **500ms debounce window** — it drains the event queue until no new events arrive within that window before processing. Only `.lua` file events are processed; other file changes are ignored.
+
+#### Reference Counting
+
+Multiple Lua files can contribute the same AppId. OST tracks this with a reference count (`g_depotRefCount`):
+
+- When a file adds an AppId via `addappid()`, the count increments
+- When a file is deleted or modified, the old file's contributions are unloaded and the count decrements
+- An AppId is only removed from the active configuration when its reference count reaches zero
+- The purchase time (`mtime`) for an AppId is tracked as the maximum across all contributing files, so Steam's UI shows the correct purchase date
+
+#### Notification Pipeline
+
+When changes are finalized, OST calls `Hooks_Package::NotifyLicenseChanged()` which:
+
+1. Consumes the pending additions and removals
+2. Grows or shrinks Steam's internal `AppIdVec` in Package ID 0 using `CUtlMemoryGrow`
+3. Calls `MarkLicenseAsChanged` and `ProcessPendingLicenseUpdates` to force Steam to re-evaluate the library UI — all without restarting
 
 ## Denuvo Compatibility
 

@@ -10,6 +10,16 @@ For games protected only by SteamStub (no Denuvo), **no AppTicket configuration 
 - Forge the requested AppId through a SteamDRMP off-by-four ticket parsing vulnerability
 - Do all of this **without injecting into the game process**
 
+### How Ticket Forging Works
+
+OST exploits a quirk in how SteamDRMP parses AppTickets. The `ForgeLocalAppOwnershipTicket` function:
+
+1. Takes a source ticket from a base AppID (defaulting to AppID 7)
+2. Injects the target AppId into the buffer at the boundary between the signed data and the signature
+3. The resulting ticket reports the target AppID while retaining the valid cryptographic signature of the source ticket
+
+This works because SteamDRMP's parser reads the AppId from a specific offset that falls outside the signed portion of the ticket. Steam's own DRM accepts this forged ticket as valid without needing a real signature for the target AppId.
+
 ## Denuvo-Protected Games
 
 Denuvo-protected games require explicit ticket data. OpenSteamTool stores `AppTicket` and `ETicket` through the platform credential store.

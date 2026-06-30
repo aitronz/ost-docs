@@ -56,7 +56,7 @@ All chunks in a depot share the same encryption key. This key is **unique to the
 
 ### The Encryption Key
 
-The encryption key used for depot chunks is a **256-bit AES key**, represented as a 64-character hex string:
+The encryption key used for depot chunks is a **256-bit AES key** (32 bytes), represented as a 64-character hex string:
 
 ```
 BCA9A9CDE94BB4DFF61849C6A87230EE45867A590FDD28826366E35E7D62C08E
@@ -64,15 +64,21 @@ BCA9A9CDE94BB4DFF61849C6A87230EE45867A590FDD28826366E35E7D62C08E
 
 This is the same key that OST refers to as a **depot decryption key** or **depot key** in Lua configuration.
 
+#### Why Depot Keys Are Needed
+
+Under normal Steam operation, depot decryption keys are **fetched from Steam's servers upon license validation** — when Steam verifies you own a game, it also retrieves the key for that game's depots and caches it. This is why legitimately owned games decrypt transparently without any user intervention.
+
+OST spoofs ownership by intercepting `CheckAppOwnership` — but this fake license validation does **not** trigger Steam's backend to return the depot key. As a result, OST must provide the key explicitly through the Lua configuration to fill the gap.
+
 #### Key Accessibility
 
-The accessibility of the depot key depends on the game's release status:
-
-| Status | Key Accessible? | Details |
+| Status | Key Available? | Details |
 |--------|:-:|---------|
-| **Released game** | ✅ Yes | Any Steam user with access to the depot can request the key from Steam's servers |
-| **Preload (unreleased)** | ❌ No | The key is withheld until the game officially releases |
-| **Free-to-play game** | ✅ Yes | Keys are publicly accessible |
+| **Legitimately owned** | ✅ Yes | Steam fetches the key from its servers after license validation |
+| **Unlocked via OST** | ❌ No (by default) | OST's spoofed license does not trigger Steam's key retrieval — the key must be provided in Lua |
+| **Preload (unreleased)** | ❌ No | The key is withheld by Steam until the game officially releases |
+| **Family shared** | ⚠️ Possibly | Steam may have the key cached from the owning account's session |
+| **Free-to-play** | ✅ Yes | Keys are publicly accessible to all users |
 
 This distinction is critical for understanding preloads and OST's behavior.
 
